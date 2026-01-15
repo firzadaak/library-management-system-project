@@ -1,8 +1,8 @@
-const { Book } = require('../models');
+const { Book, User } = require('../models');
 
 // create new book
 const createNewBook = (body) => {
-    return Book.create({ ... body });
+    return Book.create({ ...body });
 }
 
 // find many books
@@ -10,14 +10,16 @@ const findManyBooks = (searchParam) => {
     return Book.findAll({ where: { ...searchParam } });
 }
 
-// find many books
+// find one book
 const findOneBook = (searchParam) => {
-    return Book.findAll({ where: { ...searchParam } });
+    return Book.findOne({ where: { ...searchParam } });
 }
 
-// find by id
-const findBookById = (id) => {
-    return Book.findByPk(id);
+// find book by id
+const findBookById = async (id) => {
+    const book = await Book.findByPk(id, {include: [User]});
+    if (!book) throw new Error('Book with specified id does not exist');
+    return book;
 }
 
 // update book
